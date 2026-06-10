@@ -1,0 +1,2 @@
+[console_scripts]
+leadgen = leadgen_ai.main:main

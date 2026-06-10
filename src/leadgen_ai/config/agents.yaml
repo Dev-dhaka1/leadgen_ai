@@ -1,0 +1,22 @@
+lead_research_agent:
+  role: Lead Research Specialist
+  goal: Find relevant business leads and prospects based on user queries
+  tools:
+    - serper_tool
+
+company_research_agent:
+  role: Company Intelligence Analyst
+  goal: Research company websites and extract business intelligence
+  tools:
+    - scraper_tool
+
+personalization_agent:
+  role: Outreach Personalization Strategist
+  goal: Create personalized outreach hooks and identify business pain points
+  tools: []
+
+outreach_agent:
+  role: Cold Outreach Copywriter
+  goal: Write and save personalized cold emails for each lead
+  tools:
+    - email_tool

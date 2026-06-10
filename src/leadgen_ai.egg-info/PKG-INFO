@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: leadgen_ai
+Version: 0.1.0
+Summary: A CrewAI-based Lead Generation and Cold Outreach AI system
+Requires-Python: >=3.10
+Requires-Dist: crewai>=0.130.0
+Requires-Dist: crewai-tools>=0.45.0
+Requires-Dist: requests>=2.31.0
+Requires-Dist: beautifulsoup4>=4.12.0
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: streamlit>=1.35.0
+Requires-Dist: pandas>=2.0.0
+Requires-Dist: schedule>=1.2.0

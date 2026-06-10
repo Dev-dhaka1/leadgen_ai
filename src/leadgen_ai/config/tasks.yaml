@@ -1,0 +1,19 @@
+lead_research_task:
+  description: Search for 3-5 business leads matching the user query
+  agent: lead_research_agent
+  expected_output: Structured list of leads with company names, URLs, and descriptions
+
+company_research_task:
+  description: Visit each lead's website and extract key business information
+  agent: company_research_agent
+  expected_output: Research summary per company including services, audience, and activity
+
+personalization_task:
+  description: Create personalized outreach hooks, pain points, and value propositions
+  agent: personalization_agent
+  expected_output: Personalization brief per lead
+
+outreach_task:
+  description: Write cold emails and save results to the data folder
+  agent: outreach_agent
+  expected_output: Cold emails with subject lines, saved to data/
