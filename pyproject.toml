@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "leadgen_ai"
 version = "0.1.0"
 description = "A CrewAI-based Lead Generation and Cold Outreach AI system"
-requires-python = ">=3.11,<3.14"
+requires-python = ">=3.10"
 dependencies = [
     "crewai>=0.130.0",
     "crewai-tools>=0.45.0",
@@ -15,7 +15,6 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "streamlit>=1.35.0",
     "pandas>=2.0.0",
-    "schedule>=1.2.0",
 ]
 
 [project.scripts]
