@@ -147,6 +147,7 @@ from crewai.tools import tool
 
 
 def clean_text(content: str) -> str:
+    content = re.sub(r'<think>[\s\S]*?</think>', '', content)
     content = re.sub(r'<svg[\s\S]*?</svg>', '', content)
     content = re.sub(r'<[^>]+>', '', content)
     content = re.sub(r'<form[\s\S]*?</form>', '', content)
@@ -156,7 +157,6 @@ def clean_text(content: str) -> str:
 
 
 def get_data_dir() -> str:
-    # Walk up from this file to find the data folder reliably
     current = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(current, "data")
     os.makedirs(data_dir, exist_ok=True)
@@ -165,18 +165,17 @@ def get_data_dir() -> str:
 
 @tool("Email Saver Tool")
 def email_tool(content: str) -> str:
-    """Save the generated lead outreach emails to a plain text file in the data folder."""
+    """Save the generated lead outreach emails to a plain text file."""
     data_dir = get_data_dir()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"leads_outreach_{timestamp}.txt"
     filepath = os.path.join(data_dir, filename)
-
     clean_content = clean_text(content)
-
     try:
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(clean_content)
-        return f"✅ Outreach saved successfully to: data/{filename}"
+        print(f"✅ File saved at: {filepath}")
+        return f"✅ Outreach saved to: data/{filename}"
     except Exception as e:
         return f"❌ Failed to save: {str(e)}"
 
@@ -189,36 +188,42 @@ def send_email_tool(
     prospect_name: str = "",
     company: str = ""
 ) -> str:
-    """Send a plain text cold email to a prospect and log it to CSV."""
+    """Send a plain text cold email via Resend SMTP and log to CSV."""
 
     if not to_email or "@" not in to_email:
-        return f"❌ Invalid email address: '{to_email}' — skipping."
+        return f"❌ Invalid email: '{to_email}' — skipping."
 
-    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
-    smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user = os.getenv("SMTP_USER")
-    smtp_pass = os.getenv("SMTP_PASS")
+    # Resend SMTP settings
+    smtp_host = "smtp.resend.com"
+    smtp_port = 465
+    smtp_user = "resend"
+    smtp_pass = os.getenv("RESEND_API_KEY")
+    from_email = os.getenv("RESEND_FROM_EMAIL")
 
-    if not smtp_user or not smtp_pass:
-        return "❌ SMTP credentials missing in .env"
+    if not smtp_pass:
+        return "❌ RESEND_API_KEY not set in .env"
+    if not from_email:
+        return "❌ RESEND_FROM_EMAIL not set in .env"
 
     clean_body = clean_text(body)
 
     try:
         msg = MIMEMultipart("alternative")
         msg["Subject"] = subject
-        msg["From"] = smtp_user
+        msg["From"] = from_email
         msg["To"] = to_email
         msg.attach(MIMEText(clean_body, "plain"))
 
-        with smtplib.SMTP(smtp_host, smtp_port) as server:
-            server.ehlo()
-            server.starttls()
+        # Resend uses SSL on port 465
+        import ssl
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context) as server:
             server.login(smtp_user, smtp_pass)
-            server.sendmail(smtp_user, to_email, msg.as_string())
+            server.sendmail(from_email, to_email, msg.as_string())
 
         status = "sent"
-        result_msg = f"✅ Email sent to {to_email}"
+        result_msg = f"✅ Email sent to {to_email} via Resend"
 
     except Exception as e:
         status = f"failed ({str(e)})"
@@ -232,7 +237,6 @@ def _log_to_csv(company, prospect_name, to_email, subject, body, status):
     data_dir = get_data_dir()
     csv_path = os.path.join(data_dir, "sent_emails_log.csv")
     file_exists = os.path.isfile(csv_path)
-
     try:
         with open(csv_path, "a", newline="", encoding="utf-8") as csvfile:
             fieldnames = [
