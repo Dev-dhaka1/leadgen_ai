@@ -1,6 +1,9 @@
+import os
+os.environ["ANONYMIZED_TELEMETRY"] = "False"
+os.environ["CHROMA_SERVER_NOFILE"] = "65536"
+
 import streamlit as st
 import pandas as pd
-import os
 import re
 from dotenv import load_dotenv
 load_dotenv()
