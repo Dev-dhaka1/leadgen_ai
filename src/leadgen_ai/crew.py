@@ -1,9 +1,9 @@
 import os
 import sys
 
-# Fix ChromaDB configuration error
 os.environ["ANONYMIZED_TELEMETRY"] = "False"
 os.environ["CHROMA_SERVER_NOFILE"] = "65536"
+os.environ["CREWAI_STORAGE_DIR"] = "/tmp/crewai"
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -68,4 +68,6 @@ class LeadGenCrew:
             tasks=tasks,
             process=Process.sequential,
             verbose=True,
+            memory=False,
+            embedder=None,
         )
