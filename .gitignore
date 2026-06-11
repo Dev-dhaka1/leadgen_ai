@@ -6,3 +6,4 @@ src/leadgen_ai/data/*.csv
 src/leadgen_ai/data/*.txt
 crew_output.log
 .DS_Store
+google_credentials.json
