@@ -21,7 +21,7 @@ src/leadgen_ai/tasks/personalization_task.py
 src/leadgen_ai/tasks/research_task.py
 src/leadgen_ai/tools/__init__.py
 src/leadgen_ai/tools/email_tool.py
-src/leadgen_ai/tools/hubspot_tool.py
 src/leadgen_ai/tools/hunter_tool.py
 src/leadgen_ai/tools/scraper_tool.py
 src/leadgen_ai/tools/serper_tool.py
+src/leadgen_ai/tools/sheets_tool.py
